@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domine os Sinais Matemáticos | Jogo Interativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --error: #ef4444;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #1f2937;
+        }
+
+        .math-expression {
+            font-size: 1.2rem;
+            line-height: 2rem;
+        }
+
+        .answer-input {
+            transition: all 0.3s ease;
+            border: 2px solid #d1d5db;
+            width: 80px;
+            text-align: center;
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            outline: none;
+        }
+
+        .correct-answer {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+
+        .incorrect-answer {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--error);
+        }
+
+        .progress-bar {
+            height: 8px;
+            transition: width 0.5s ease;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .has-tooltip:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 3s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
+                <span class="text-indigo-600">Domine os Sinais</span> Matemáticos
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Aprenda as regras de sinais de forma interativa com explicações detalhadas e exercícios adaptativos
+            </p>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+            <!-- Theory Panel -->
+            <!--<div class="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8 h-fit">-->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden top-8 h-fit">
+                <div class="p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                    <h2 class="text-2xl font-bold mb-2">Regras dos Sinais</h2>
+                    <p class="opacity-90">Entenda os fundamentos das operações com números positivos e negativos</p>
+                </div>
+
+                <div class="p-6 space-y-8">
+                    <!-- Addition Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold flex items-center">
+                            <span class="bg-indigo-100 text-indigo-800 rounded-full p-2 mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Adição
+                        </h3>
+
+                        <div class="space-y-3 pl-11">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Sinais iguais:</p>
+                                <div class="math-expression">\( (+a) + (+b) = +(a + b) \)</div>
+                                <div class="math-expression">\( (-a) + (-b) = -(a + b) \)</div>
+                                <p class="text-sm text-gray-600 mt-2">Some os valores absolutos e mantenha o sinal
+                                    comum.</p>
+                            </div>
+
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Sinais diferentes:</p>
+                                <div class="math-expression">\( (+a) + (-b) = \) sinal do maior em módulo</div>
+                                <div class="math-expression">\( (-a) + (+b) = \) sinal do maior em módulo</div>
+                                <p class="text-sm text-gray-600 mt-2">Subtraia os valores absolutos e atribua o sinal do
+                                    número com maior valor absoluto.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subtraction Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold flex items-center">
+                            <span class="bg-indigo-100 text-indigo-800 rounded-full p-2 mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Subtração
+                        </h3>
+
+                        <div class="space-y-3 pl-11">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Transformação em adição:</p>
+                                <div class="math-expression">\( a - b = a + (-b) \)</div>
+                                <p class="text-sm text-gray-600 mt-2">A subtração é equivalente à adição do oposto.</p>
+                            </div>
+
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Regra prática:</p>
+                                <div class="math-expression">\( -(-a) = +a \)</div>
+                                <p class="text-sm text-gray-600 mt-2">O sinal negativo antes de parênteses inverte os
+                                    sinais internos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Multiplication Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold flex items-center">
+                            <span class="bg-indigo-100 text-indigo-800 rounded-full p-2 mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Multiplicação
+                        </h3>
+
+                        <div class="space-y-3 pl-11">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Regra dos sinais:</p>
+                                <div class="math-expression">\( (+) \times (+) = (+) \)</div>
+                                <div class="math-expression">\( (+) \times (-) = (-) \)</div>
+                                <div class="math-expression">\( (-) \times (+) = (-) \)</div>
+                                <div class="math-expression">\( (-) \times (-) = (+) \)</div>
+                                <p class="text-sm text-gray-600 mt-2">Sinais iguais: resultado positivo. Sinais
+                                    diferentes: resultado negativo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Division Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold flex items-center">
+                            <span class="bg-indigo-100 text-indigo-800 rounded-full p-2 mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Divisão
+                        </h3>
+
+                        <div class="space-y-3 pl-11">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="font-medium text-gray-700 mb-1">Regra dos sinais:</p>
+                                <div class="math-expression">\( (+) \div (+) = (+) \)</div>
+                                <div class="math-expression">\( (+) \div (-) = (-) \)</div>
+                                <div class="math-expression">\( (-) \div (+) = (-) \)</div>
+                                <div class="math-expression">\( (-) \div (-) = (+) \)</div>
+                                <p class="text-sm text-gray-600 mt-2">As mesmas regras da multiplicação se aplicam à
+                                    divisão.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="bg-white shadow-lg rounded-lg p-6 sticky top-0 z-50">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-lg font-medium">Seu Progresso</h2>
+                    <span id="progress-text" class="text-sm font-medium text-indigo-600">0% completo</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 rounded-full h-2.5 transition-all duration-500"
+                        style="width: 0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Panel -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold">Exercícios Práticos</h2>
+                            <button id="generate-new"
+                                class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                                Gerar Novos
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="exercises-container">
+                            <!-- Exercises will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Panel (initially hidden) -->
+                <div id="results-panel"
+                    class="hidden bg-white rounded-lg shadow-lg overflow-hidden animate__animated animate__fadeIn">
+                    <div class="p-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white">
+                        <h2 class="text-2xl font-bold">Seu Resultado, tire um Print e manda no Grupo da Sala para validar!</h2>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="text-center py-8">
+                            <div
+                                class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 text-green-600 mb-6">
+                                <span id="score-percentage" class="text-3xl font-bold">0</span>
+                                <span class="text-3xl font-bold">%</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold mb-2" id="result-title">Carregando...</h3>
+                            <p class="text-gray-600 mb-6" id="result-message"></p>
+
+                            <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
+                                <div id="result-bar" class="h-4 rounded-full" style="width: 0%"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <p class="text-sm text-green-600">Corretas</p>
+                                    <p id="correct-count" class="text-2xl font-bold text-green-600">0</p>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg">
+                                    <p class="text-sm text-red-600">Incorretas</p>
+                                    <p id="incorrect-count" class="text-2xl font-bold text-red-600">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="try-again"
+                            class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors mt-6">
+                            Tentar Novamente
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            exercises: [],
+            userAnswers: Array(100).fill(''),
+            currentProgress: 0
+        };
+
+        // DOM elements
+        const elements = {
+            exercisesContainer: document.getElementById('exercises-container'),
+            progressText: document.getElementById('progress-text'),
+            progressBar: document.getElementById('progress-bar'),
+            resultsPanel: document.getElementById('results-panel'),
+            scorePercentage: document.getElementById('score-percentage'),
+            resultTitle: document.getElementById('result-title'),
+            resultMessage: document.getElementById('result-message'),
+            resultBar: document.getElementById('result-bar'),
+            correctCount: document.getElementById('correct-count'),
+            incorrectCount: document.getElementById('incorrect-count'),
+            generateNewBtn: document.getElementById('generate-new'),
+            tryAgainBtn: document.getElementById('try-again')
+        };
+
+        // Configuration
+        const config = {
+            maxNumber: 20,
+            minNumber: 1,
+            totalExercises: 100
+        };
+
+        // Helper functions
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomOperator() {
+            const operators = ['+', '-', '×', '÷'];
+            return operators[Math.floor(Math.random() * operators.length)];
+        }
+
+        function getRandomSign() {
+            return Math.random() < 0.5 ? '+' : '-';
+        }
+
+        function calculateAnswer(a, signA, b, signB, operator) {
+            const numA = signA === '+' ? a : -a;
+            const numB = signB === '+' ? b : -b;
+
+            switch (operator) {
+                case '+': return numA + numB;
+                case '-': return numA - numB;
+                case '×': return numA * numB;
+                case '÷': return numA / numB;
+            }
+        }
+
+        function formatMathExpression(a, signA, b, signB, operator) {
+            // For addition and subtraction, we always show signs
+            if (operator === '+' || operator === '-') {
+                return `(${signA}${a}) ${operator} (${signB}${b})`;
+            }
+            // For multiplication and division, we only show negative signs
+            else {
+                const first = signA === '-' ? `-${a}` : a;
+                const second = signB === '-' ? `-${b}` : b;
+                return `${first} ${operator} ${second}`;
+            }
+        }
+
+        // Generate exercises
+        function generateExercises() {
+            state.exercises = [];
+            state.userAnswers = Array(config.totalExercises).fill('');
+            state.currentProgress = 0;
+
+            elements.exercisesContainer.innerHTML = '';
+            elements.resultsPanel.classList.add('hidden');
+            updateProgress(0);
+
+            for (let i = 0; i < config.totalExercises; i++) {
+                let a, b, operator, signA, signB;
+
+                operator = getRandomOperator();
+
+                // Ensure division results are integers
+                if (operator === '÷') {
+                    b = getRandomInt(config.minNumber, config.maxNumber);
+                    const multiplier = getRandomInt(1, Math.floor(config.maxNumber / b));
+                    a = b * multiplier;
+                    signA = getRandomSign();
+                    signB = getRandomSign();
+                } else {
+                    a = getRandomInt(config.minNumber, config.maxNumber);
+                    b = getRandomInt(config.minNumber, config.maxNumber);
+                    signA = getRandomSign();
+                    signB = getRandomSign();
+                }
+
+                const expression = formatMathExpression(a, signA, b, signB, operator);
+                const answer = calculateAnswer(a, signA, b, signB, operator);
+
+                state.exercises.push({
+                    id: i,
+                    expression,
+                    answer,
+                    operator
+                });
+
+                // Create exercise element
+                const exerciseElement = document.createElement('div');
+                exerciseElement.className = 'bg-gray-50 rounded-lg p-4';
+                exerciseElement.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-3">${i + 1}.</span>
+                        <div class="math-expression mr-3">${expression} =</div>
+                        <input type="text" 
+                               id="answer-${i}" 
+                               class="answer-input rounded-lg py-1 px-3" 
+                               data-exercise-id="${i}"
+                               oninput="app.handleAnswerInput(${i}, this.value)">
+                    </div>
+                `;
+
+                elements.exercisesContainer.appendChild(exerciseElement);
+            }
+        }
+
+        // Update progress
+        function updateProgress(answeredCount) {
+            const percentage = Math.round((answeredCount / config.totalExercises) * 100);
+            state.currentProgress = percentage;
+
+            elements.progressText.textContent = `${percentage}% completo`;
+            elements.progressBar.style.width = `${percentage}%`;
+
+            // Change color based on progress
+            if (percentage < 30) {
+                elements.progressBar.classList.remove('bg-indigo-600', 'bg-yellow-500', 'bg-green-500');
+                elements.progressBar.classList.add('bg-red-500');
+            } else if (percentage < 70) {
+                elements.progressBar.classList.remove('bg-indigo-600', 'bg-red-500', 'bg-green-500');
+                elements.progressBar.classList.add('bg-yellow-500');
+            } else if (percentage < 100) {
+                elements.progressBar.classList.remove('bg-indigo-600', 'bg-red-500', 'bg-yellow-500');
+                elements.progressBar.classList.add('bg-green-500');
+            } else {
+                elements.progressBar.classList.remove('bg-red-500', 'bg-yellow-500', 'bg-green-500');
+                elements.progressBar.classList.add('bg-indigo-600');
+            }
+        }
+
+        // Check answers
+        function checkAnswers() {
+            let correctCount = 0;
+
+            state.exercises.forEach((exercise, index) => {
+                const userAnswer = state.userAnswers[index];
+                const inputElement = document.getElementById(`answer-${index}`);
+
+                if (inputElement) {
+                    // Reset classes
+                    inputElement.classList.remove('correct-answer', 'incorrect-answer');
+
+                    // Check if answer is provided and correct
+                    if (userAnswer !== '' && !isNaN(userAnswer)) {
+                        if (parseFloat(userAnswer) === exercise.answer) {
+                            correctCount++;
+                            inputElement.classList.add('correct-answer');
+                        } else {
+                            inputElement.classList.add('incorrect-answer');
+                        }
+                    }
+                }
+            });
+
+            return correctCount;
+        }
+
+        // Show results
+        function showResults() {
+            const correctCount = checkAnswers();
+            const incorrectCount = config.totalExercises - correctCount;
+            const percentage = Math.round((correctCount / config.totalExercises) * 100);
+
+            // Update results UI
+            elements.scorePercentage.textContent = percentage;
+            elements.correctCount.textContent = correctCount;
+            elements.incorrectCount.textContent = incorrectCount;
+
+            // Set result bar color and width
+            elements.resultBar.style.width = `${percentage}%`;
+            if (percentage < 50) {
+                elements.resultBar.classList.remove('bg-yellow-500', 'bg-green-500');
+                elements.resultBar.classList.add('bg-red-500');
+                elements.resultTitle.textContent = "Continue Praticando!";
+                elements.resultMessage.textContent = "Você está no caminho certo! Revise as regras e tente novamente.";
+            } else if (percentage < 80) {
+                elements.resultBar.classList.remove('bg-red-500', 'bg-green-500');
+                elements.resultBar.classList.add('bg-yellow-500');
+                elements.resultTitle.textContent = "Bom Trabalho!";
+                elements.resultMessage.textContent = "Você está indo bem! Com mais prática, você vai dominar completamente os sinais.";
+            } else {
+                elements.resultBar.classList.remove('bg-red-500', 'bg-yellow-500');
+                elements.resultBar.classList.add('bg-green-500');
+                elements.resultTitle.textContent = "Excelente!";
+                elements.resultMessage.textContent = "Você demonstrou um ótimo entendimento das regras de sinais!";
+            }
+
+            // Show results panel with animation
+            elements.resultsPanel.classList.remove('hidden');
+            elements.resultsPanel.classList.add('animate__fadeIn');
+
+            // Scroll to results
+            elements.resultsPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // App controller
+        const app = {
+            init() {
+                generateExercises();
+
+                // Event listeners
+                elements.generateNewBtn.addEventListener('click', () => {
+                    generateExercises();
+                });
+
+                elements.tryAgainBtn.addEventListener('click', () => {
+                    generateExercises();
+                });
+
+                // Handle answer input
+                window.app = window.app || {};
+                window.app.handleAnswerInput = this.handleAnswerInput;
+            },
+
+            handleAnswerInput(index, value) {
+                state.userAnswers[index] = value.trim();
+
+                // Count how many answers have been provided
+                const answeredCount = state.userAnswers.filter(answer => answer !== '').length;
+                updateProgress(answeredCount);
+
+                // If all answers are filled, show results button
+                if (answeredCount === config.totalExercises) {
+                    setTimeout(showResults, 500);
+                }
+            }
+        };
+        function showFocusModal() {
+            // Create modal elements
+            const modalOverlay = document.createElement('div');
+            modalOverlay.style.position = 'fixed';
+            modalOverlay.style.top = '0';
+            modalOverlay.style.left = '0';
+            modalOverlay.style.width = '100%';
+            modalOverlay.style.height = '100%';
+            modalOverlay.style.backgroundColor = 'rgba(255, 0, 0, 0.9)'; // Red background for impact
+            modalOverlay.style.zIndex = '10000';
+            modalOverlay.style.display = 'flex';
+            modalOverlay.style.justifyContent = 'center';
+            modalOverlay.style.alignItems = 'center';
+
+            const modalContent = document.createElement('div');
+            modalContent.style.backgroundColor = '#fff';
+            modalContent.style.padding = '30px';
+            modalContent.style.borderRadius = '12px';
+            modalContent.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
+            modalContent.style.textAlign = 'center';
+            modalContent.style.maxWidth = '500px';
+            modalContent.style.width = '90%';
+            modalContent.style.animation = 'scaleUp 0.3s ease-in-out';
+
+            const modalText = document.createElement('p');
+            modalText.style.marginBottom = '20px';
+            modalText.style.fontSize = '18px';
+            modalText.style.color = '#333';
+            modalText.style.fontWeight = 'bold';
+            modalText.innerHTML = `
+                    <span style="color: red; font-size: 24px;">⚠️ Atenção!</span><br><br>
+                    Esta página está em modo foco.<br><br>
+                    Recarregar a página, abrir novas abas ou pressionar as teclas <strong>F5</strong> e <strong>F12</strong> bloqueará a página e ela será fechada.<br><br>
+                    Clique em <strong>OK</strong> para continuar.
+                `;
+
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'OK';
+            closeButton.style.backgroundColor = '#e3342f';
+            closeButton.style.color = '#fff';
+            closeButton.style.border = 'none';
+            closeButton.style.padding = '12px 24px';
+            closeButton.style.borderRadius = '6px';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.fontSize = '16px';
+            closeButton.style.transition = 'background-color 0.3s ease';
+
+            closeButton.addEventListener('mouseover', function () {
+                closeButton.style.backgroundColor = '#cc1f1a';
+            });
+
+            closeButton.addEventListener('mouseout', function () {
+                closeButton.style.backgroundColor = '#e3342f';
+            });
+
+            closeButton.addEventListener('click', function () {
+                modalOverlay.remove();
+            });
+
+            modalContent.appendChild(modalText);
+            modalContent.appendChild(closeButton);
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+
+            // Add keyframe animation for scaling effect
+            const styleSheet = document.createElement('style');
+            styleSheet.type = 'text/css';
+            styleSheet.innerHTML = `
+                    @keyframes scaleUp {
+                        0% {
+                            transform: scale(0.8);
+                            opacity: 0;
+                        }
+                        100% {
+                            transform: scale(1);
+                            opacity: 1;
+                        }
+                    }
+                `;
+            document.head.appendChild(styleSheet);
+        }
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                window.close(); // Fecha a aba
+            }
+        });
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "F12" || event.key === "F5") {
+                event.preventDefault();
+                disableAllFields();
+            }
+        });
+        window.addEventListener("blur", function () {
+            window.close(); // Fecha a aba se outro app for aberto
+        });
+
+        // Call the modal function when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            showFocusModal();
+        });
+        function disableAllFields() {
+            document.querySelectorAll('input, select, textarea, button').forEach(function (field) {
+                field.disabled = true;
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+
+</html>
