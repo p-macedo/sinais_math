@@ -1,0 +1,47 @@
+:root {
+    --primary: #4f46e5;
+    --secondary: #10b981;
+    --accent: #f59e0b;
+    --error: #ef4444;
+    --success: #10b981;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1f2937;
+}
+
+.math-expression {
+    font-size: 1.2rem;
+    line-height: 2rem;
+}
+
+.answer-input {
+    transition: all 0.3s ease;
+    border: 2px solid #d1d5db;
+    width: 80px;
+    text-align: center;
+}
+
+.answer-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    outline: none;
+}
+
+.correct-answer {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success);
+}
+
+.incorrect-answer {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--error);
+}
+
+.progress-bar {
+    height: 8px;
+    transition: width 0.5s ease;
+}
+
+/* Add other styles from original as needed */
